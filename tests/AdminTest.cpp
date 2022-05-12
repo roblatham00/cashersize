@@ -3,48 +3,48 @@
  * 
  * See COPYRIGHT in top-level directory.
  */
-#include <alpha/Admin.hpp>
+#include <cachersize/Admin.hpp>
 #include <cppunit/extensions/HelperMacros.h>
 
 extern thallium::engine engine;
-extern std::string resource_type;
+extern std::string cache_type;
 
 class AdminTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( AdminTest );
-    CPPUNIT_TEST( testAdminCreateResource );
+    CPPUNIT_TEST( testAdminCreateCache );
     CPPUNIT_TEST_SUITE_END();
 
-    static constexpr const char* resource_config = "{ \"path\" : \"mydb\" }";
+    static constexpr const char* cache_config = "{ \"path\" : \"mydb\" }";
 
     public:
 
     void setUp() {}
     void tearDown() {}
 
-    void testAdminCreateResource() {
-        alpha::Admin admin(engine);
+    void testAdminCreateCache() {
+        cachersize::Admin admin(engine);
         std::string addr = engine.self();
 
-        alpha::UUID resource_id;
-        // Create a valid Resource
-        CPPUNIT_ASSERT_NO_THROW_MESSAGE("admin.createResource should return a valid Resource",
-                resource_id = admin.createResource(addr, 0, resource_type, resource_config));
+        cachersize::UUID cache_id;
+        // Create a valid Cache
+        CPPUNIT_ASSERT_NO_THROW_MESSAGE("admin.createCache should return a valid Cache",
+                cache_id = admin.createCache(addr, 0, cache_type, cache_config));
 
-        // Create a Resource with a wrong backend type
-        alpha::UUID bad_id;
-        CPPUNIT_ASSERT_THROW_MESSAGE("admin.createResource should throw an exception (wrong backend)",
-                bad_id = admin.createResource(addr, 0, "blabla", resource_config),
-                alpha::Exception);
+        // Create a Cache with a wrong backend type
+        cachersize::UUID bad_id;
+        CPPUNIT_ASSERT_THROW_MESSAGE("admin.createCache should throw an exception (wrong backend)",
+                bad_id = admin.createCache(addr, 0, "blabla", cache_config),
+                cachersize::Exception);
 
-        // Destroy the Resource
-        CPPUNIT_ASSERT_NO_THROW_MESSAGE("admin.destroyResource should not throw on valid Resource",
-            admin.destroyResource(addr, 0, resource_id));
+        // Destroy the Cache
+        CPPUNIT_ASSERT_NO_THROW_MESSAGE("admin.destroyCache should not throw on valid Cache",
+            admin.destroyCache(addr, 0, cache_id));
 
-        // Destroy an invalid Resource
-        CPPUNIT_ASSERT_THROW_MESSAGE("admin.destroyResource should throw on invalid Resource",
-            admin.destroyResource(addr, 0, bad_id),
-            alpha::Exception);
+        // Destroy an invalid Cache
+        CPPUNIT_ASSERT_THROW_MESSAGE("admin.destroyCache should throw on invalid Cache",
+            admin.destroyCache(addr, 0, bad_id),
+            cachersize::Exception);
     }
 };
 CPPUNIT_TEST_SUITE_REGISTRATION( AdminTest );

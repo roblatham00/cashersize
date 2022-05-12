@@ -3,7 +3,7 @@
  * 
  * See COPYRIGHT in top-level directory.
  */
-#include <alpha/Client.hpp>
+#include <cachersize/Client.hpp>
 #include <spdlog/spdlog.h>
 #include <tclap/CmdLine.h>
 #include <iostream>
@@ -12,7 +12,7 @@ namespace tl = thallium;
 
 static std::string g_address;
 static std::string g_protocol;
-static std::string g_resource;
+static std::string g_cache;
 static unsigned    g_provider_id;
 static std::string g_log_level = "info";
 
@@ -28,19 +28,19 @@ int main(int argc, char** argv) {
     try {
 
         // Initialize a Client
-        alpha::Client client(engine);
+        cachersize::Client client(engine);
 
         // Open the Database "mydatabase" from provider 0
-        alpha::ResourceHandle resource =
-            client.makeResourceHandle(g_address, g_provider_id,
-                    alpha::UUID::from_string(g_resource.c_str()));
+        cachersize::CacheHandle cache =
+            client.makeCacheHandle(g_address, g_provider_id,
+                    cachersize::UUID::from_string(g_cache.c_str()));
 
-        resource.sayHello();
+        cache.sayHello();
 
         int32_t result;
-        resource.computeSum(32, 54, &result);
+        cache.computeSum(32, 54, &result);
 
-    } catch(const alpha::Exception& ex) {
+    } catch(const cachersize::Exception& ex) {
         std::cerr << ex.what() << std::endl;
         exit(-1);
     }
@@ -50,19 +50,19 @@ int main(int argc, char** argv) {
 
 void parse_command_line(int argc, char** argv) {
     try {
-        TCLAP::CmdLine cmd("Alpha client", ' ', "0.1");
+        TCLAP::CmdLine cmd("Cachersize client", ' ', "0.1");
         TCLAP::ValueArg<std::string> addressArg("a","address","Address or server", true,"","string");
         TCLAP::ValueArg<unsigned>    providerArg("p", "provider", "Provider id to contact (default 0)", false, 0, "int");
-        TCLAP::ValueArg<std::string> resourceArg("r","resource","Resource id", true, alpha::UUID().to_string(),"string");
+        TCLAP::ValueArg<std::string> cacheArg("r","cache","Cache id", true, cachersize::UUID().to_string(),"string");
         TCLAP::ValueArg<std::string> logLevel("v","verbose", "Log level (trace, debug, info, warning, error, critical, off)", false, "info", "string");
         cmd.add(addressArg);
         cmd.add(providerArg);
-        cmd.add(resourceArg);
+        cmd.add(cacheArg);
         cmd.add(logLevel);
         cmd.parse(argc, argv);
         g_address = addressArg.getValue();
         g_provider_id = providerArg.getValue();
-        g_resource = resourceArg.getValue();
+        g_cache = cacheArg.getValue();
         g_log_level = logLevel.getValue();
         g_protocol = g_address.substr(0, g_address.find(":"));
     } catch(TCLAP::ArgException &e) {

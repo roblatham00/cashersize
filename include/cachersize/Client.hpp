@@ -3,26 +3,26 @@
  *
  * See COPYRIGHT in top-level directory.
  */
-#ifndef __ALPHA_CLIENT_HPP
-#define __ALPHA_CLIENT_HPP
+#ifndef __CACHERSIZE_CLIENT_HPP
+#define __CACHERSIZE_CLIENT_HPP
 
-#include <alpha/ResourceHandle.hpp>
-#include <alpha/UUID.hpp>
+#include <cachersize/CacheHandle.hpp>
+#include <cachersize/UUID.hpp>
 #include <thallium.hpp>
 #include <memory>
 
-namespace alpha {
+namespace cachersize {
 
 class ClientImpl;
-class ResourceHandle;
+class CacheHandle;
 
 /**
  * @brief The Client object is the main object used to establish
- * a connection with a Alpha service.
+ * a connection with a Cachersize service.
  */
 class Client {
 
-    friend class ResourceHandle;
+    friend class CacheHandle;
 
     public:
 
@@ -76,20 +76,20 @@ class Client {
     const thallium::engine& engine() const;
 
     /**
-     * @brief Creates a handle to a remote resource and returns.
+     * @brief Creates a handle to a remote cache and returns.
      * You may set "check" to false if you know for sure that the
-     * corresponding resource exists, which will avoid one RPC.
+     * corresponding cache exists, which will avoid one RPC.
      *
      * @param address Address of the provider holding the database.
      * @param provider_id Provider id.
-     * @param resource_id Resource UUID.
+     * @param cache_id Cache UUID.
      * @param check Checks if the Database exists by issuing an RPC.
      *
-     * @return a ResourceHandle instance.
+     * @return a CacheHandle instance.
      */
-    ResourceHandle makeResourceHandle(const std::string& address,
+    CacheHandle makeCacheHandle(const std::string& address,
                                       uint16_t provider_id,
-                                      const UUID& resource_id,
+                                      const UUID& cache_id,
                                       bool check = true) const;
 
     /**

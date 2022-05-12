@@ -6,31 +6,31 @@
 #include "DummyBackend.hpp"
 #include <iostream>
 
-ALPHA_REGISTER_BACKEND(dummy, DummyResource);
+CACHERSIZE_REGISTER_BACKEND(dummy, DummyCache);
 
-void DummyResource::sayHello() {
+void DummyCache::sayHello() {
     std::cout << "Hello World" << std::endl;
 }
 
-alpha::RequestResult<int32_t> DummyResource::computeSum(int32_t x, int32_t y) {
-    alpha::RequestResult<int32_t> result;
+cachersize::RequestResult<int32_t> DummyCache::computeSum(int32_t x, int32_t y) {
+    cachersize::RequestResult<int32_t> result;
     result.value() = x + y;
     return result;
 }
 
-alpha::RequestResult<bool> DummyResource::destroy() {
-    alpha::RequestResult<bool> result;
+cachersize::RequestResult<bool> DummyCache::destroy() {
+    cachersize::RequestResult<bool> result;
     result.value() = true;
     // or result.success() = true
     return result;
 }
 
-std::unique_ptr<alpha::Backend> DummyResource::create(const thallium::engine& engine, const json& config) {
+std::unique_ptr<cachersize::Backend> DummyCache::create(const thallium::engine& engine, const json& config) {
     (void)engine;
-    return std::unique_ptr<alpha::Backend>(new DummyResource(config));
+    return std::unique_ptr<cachersize::Backend>(new DummyCache(config));
 }
 
-std::unique_ptr<alpha::Backend> DummyResource::open(const thallium::engine& engine, const json& config) {
+std::unique_ptr<cachersize::Backend> DummyCache::open(const thallium::engine& engine, const json& config) {
     (void)engine;
-    return std::unique_ptr<alpha::Backend>(new DummyResource(config));
+    return std::unique_ptr<cachersize::Backend>(new DummyCache(config));
 }
